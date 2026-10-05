@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --bg: 244 241 235;
+  --elevated: 251 249 246;
+  --surface: 235 230 222;
+  --ink: 26 24 20;
+  --muted: 92 87 78;
+  --faint: 138 132 120;
+  --line: 221 214 204;
+  --accent: 140 74 50;
+  --accent-ink: 255 250 246;
+  --soft: 243 230 223;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: 12 16 27;
+  --elevated: 18 24 38;
+  --surface: 27 35 52;
+  --ink: 237 241 247;
+  --muted: 176 184 198;
+  --faint: 126 136 154;
+  --line: 40 51 72;
+  --accent: 201 154 112;
+  --accent-ink: 20 16 12;
+  --soft: 46 36 32;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: rgb(var(--bg));
+  color: rgb(var(--ink));
+  font-family: Figtree, system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgb(var(--accent) / 0.22);
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--accent));
+  outline-offset: 3px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--line));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
