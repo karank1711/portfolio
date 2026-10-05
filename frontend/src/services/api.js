@@ -6,7 +6,9 @@ export class ApiError extends Error {
 }
 
 function apiBase() {
-  return import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  const configured = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  const base = configured.replace(/\/+$/, '');
+  return base.endsWith('/api') ? base : `${base}/api`;
 }
 
 export async function api(path, { method = 'GET', body } = {}) {
