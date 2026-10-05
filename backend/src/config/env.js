@@ -29,8 +29,13 @@ export function missingEnv() {
   return REQUIRED.filter((key) => !process.env[key]);
 }
 
+const PRODUCTION_ORIGINS = [
+  'https://portfolio-del10cbvw-karans-projects-43a893ed.vercel.app',
+  'https://portfolio-admin-aa9i.onrender.com',
+];
+
 export function allowedOrigins() {
-  return [env.corsOrigin, env.adminOrigin]
+  return [env.corsOrigin, env.adminOrigin, ...PRODUCTION_ORIGINS]
     .flatMap((value) => value.split(','))
     .map((value) => value.trim())
     .filter(Boolean);
