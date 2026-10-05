@@ -30,7 +30,7 @@ export function missingEnv() {
 }
 
 const PRODUCTION_ORIGINS = [
-  'https://portfolio-del10cbvw-karans-projects-43a893ed.vercel.app',
+  'https://portfolio-omega-three-48.vercel.app',
   'https://portfolio-admin-aa9i.onrender.com',
 ];
 

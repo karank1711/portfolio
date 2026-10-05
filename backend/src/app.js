@@ -11,7 +11,9 @@ export const app = express();
 if (env.nodeEnv === 'production') app.set('trust proxy', 1);
 app.disable('x-powered-by');
 
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+}));
 app.use(cors({
   origin: allowedOrigins(),
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
