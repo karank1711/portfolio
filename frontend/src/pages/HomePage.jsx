@@ -13,8 +13,8 @@ export function HomePage() {
     <PortfolioGate>
       {(data) => (
         <>
-          <Hero profile={data.profile} about={data.about} socialLinks={data.socialLinks || []} resume={data.resume} />
-          <About about={data.about} profile={data.profile} resume={data.resume} />
+          <Hero profile={data.profile} about={data.about} socialLinks={data.socialLinks || []} />
+          <About about={data.about} profile={data.profile} />
           <Skills skills={data.skills || []} />
           <Experience items={data.experiences || []} />
           <Education items={data.education || []} />

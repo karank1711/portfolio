@@ -6,9 +6,10 @@ import { SketchPortrait } from '@/components/hero/SketchPortrait.jsx';
 import { RoleRotator } from '@/components/hero/RoleRotator.jsx';
 import { SocialIcon } from '@/components/common/SocialIcon.jsx';
 import { initials } from '@/utils/format.js';
+import { RESUME_URL } from '@/utils/resume.js';
 import { isExternal, socialHref } from '@/utils/social.js';
 
-export function Hero({ profile, about, socialLinks = [], resume }) {
+export function Hero({ profile, about, socialLinks = [] }) {
   const reduce = useReducedMotion();
   if (!profile?.fullName && !profile?.shortIntro) {
     return (
@@ -44,11 +45,9 @@ export function Hero({ profile, about, socialLinks = [], resume }) {
             <div className="mt-8 flex flex-wrap gap-3">
               <Button href="/projects">View Projects</Button>
               <Button href="/contact" variant="secondary">Contact Me</Button>
-              {resume?.fileUrl ? (
-                <Button href={resume.fileUrl} variant="secondary" target="_blank" rel="noreferrer">
-                  Download Resume
-                </Button>
-              ) : null}
+              <Button href={RESUME_URL} variant="secondary" target="_blank" rel="noreferrer">
+                View Resume
+              </Button>
             </div>
             {socialLinks.length ? (
               <ul className="mt-8 flex flex-wrap gap-2">

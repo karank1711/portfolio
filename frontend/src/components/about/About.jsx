@@ -4,8 +4,9 @@ import { EmptyNote } from '@/components/common/StateMessage.jsx';
 import { Reveal } from '@/components/common/Reveal.jsx';
 import { Section } from '@/components/common/Container.jsx';
 import { SectionHeading } from '@/components/common/SectionHeading.jsx';
+import { RESUME_URL } from '@/utils/resume.js';
 
-export function About({ about, profile, resume }) {
+export function About({ about, profile }) {
   const highlights = about?.highlights || [];
   const hasContent = about && (about.summary || about.personalIntro || about.currentEducation || highlights.length);
   const facts = [
@@ -31,14 +32,12 @@ export function About({ about, profile, resume }) {
               {about?.summary ? <p className="font-serif text-2xl leading-snug text-ink">{about.summary}</p> : null}
               {about?.personalIntro ? <p className="whitespace-pre-wrap">{about.personalIntro}</p> : null}
             </div>
-            {resume?.fileUrl ? (
-              <div className="mt-8">
-                <Button href={resume.fileUrl} variant="secondary" target="_blank" rel="noreferrer">
-                  <Download size={15} aria-hidden />
-                  Download Resume
-                </Button>
-              </div>
-            ) : null}
+            <div className="mt-8">
+              <Button href={RESUME_URL} variant="secondary" target="_blank" rel="noreferrer">
+                <Download size={15} aria-hidden />
+                  View Resume
+              </Button>
+            </div>
           </Reveal>
           {facts.length ? (
             <Reveal delay={0.08}>
