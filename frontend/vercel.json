@@ -1,5 +1,17 @@
+
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/admin",
+      "destination": "https://portfolio-admin-aa9i.onrender.com/"
+    },
+    {
+      "source": "/admin/:path*",
+      "destination": "https://portfolio-admin-aa9i.onrender.com/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
