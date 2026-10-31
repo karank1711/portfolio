@@ -7,8 +7,7 @@ import { errorHandler, notFound } from './middleware/errorHandler.js';
 import api from './routes/index.js';
 
 export const app = express();
-
-if (env.nodeEnv === 'production') app.set('trust proxy', 1);
+ app.set('trust proxy', 1);
 app.disable('x-powered-by');
 
 app.use(helmet({
