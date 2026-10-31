@@ -32,6 +32,7 @@ export function missingEnv() {
 const PRODUCTION_ORIGINS = [
   'https://portfolio-omega-three-48.vercel.app',
   'https://portfolio-admin-aa9i.onrender.com',
+  'https://karankumar.de5.net',
 ];
 
 export function allowedOrigins() {
