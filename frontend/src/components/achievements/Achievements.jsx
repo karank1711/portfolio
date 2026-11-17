@@ -39,7 +39,7 @@ export function Achievements({ items = [] }) {
                   {showImage || item.certificateUrl || item.verificationUrl ? (
                     <div className="mt-4 flex flex-wrap items-center gap-4 sm:pl-[3.25rem]">
                       {showImage ? (
-                        <img src={item.certificateUrl} alt={`${item.title} certificate`} loading="lazy" className="max-h-28 rounded-xl border border-line bg-surface object-contain" />
+                        <img src={item.certificateUrl} alt={`${item.title} certificate`} loading="lazy" decoding="async" className="max-h-28 rounded-xl border border-line bg-surface object-contain" />
                       ) : null}
                       {item.certificateUrl ? <TextLink href={item.certificateUrl} external>{isPdf(item.certificateUrl) ? 'Certificate' : 'View image'}</TextLink> : null}
                       {item.verificationUrl ? <TextLink href={item.verificationUrl} external>Verify</TextLink> : null}

@@ -14,6 +14,7 @@ export const profileSchema = z.object({
   location: z.string().trim().max(120).optional().default(''),
   email: z.union([z.string().trim().email('Enter a valid email').max(254), z.literal('')]).optional().default(''),
   phone: optionalText(40),
+  profileMediaType: z.enum(['image', 'video']).optional().default('image'),
 }).strict();
 
 export const aboutSchema = z.object({

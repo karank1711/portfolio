@@ -10,7 +10,9 @@ export function errorHandler(err, req, res, next) {
   if (res.headersSent) return next(err);
 
   if (err instanceof multer.MulterError) {
-    const message = err.code === 'LIMIT_FILE_SIZE' ? 'File is too large' : 'Upload failed';
+    const message = err.code === 'LIMIT_FILE_SIZE'
+      ? 'File is too large. Max limit is 5 MB for images and 25 MB for videos.'
+      : (err.message || 'Upload failed');
     return res.status(400).json({ success: false, message });
   }
 

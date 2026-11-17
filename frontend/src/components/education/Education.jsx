@@ -21,7 +21,7 @@ export function Education({ items = [] }) {
                   <div className="flex min-w-0 gap-3">
                     <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-soft text-accent">
                       {item.logoUrl ? (
-                        <img src={item.logoUrl} alt="" className="h-5 w-5 object-contain" />
+                        <img src={item.logoUrl} alt="" loading="lazy" decoding="async" className="h-5 w-5 object-contain" />
                       ) : (
                         <GraduationCap size={18} aria-hidden />
                       )}

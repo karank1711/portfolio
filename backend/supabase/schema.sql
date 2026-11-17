@@ -34,6 +34,9 @@ create table if not exists profile (
   location text not null default '',
   email text not null default '',
   phone text,
+  profile_media_type text not null default 'image',
+  profile_media_url text,
+  profile_media_path text,
   profile_image_url text,
   profile_image_path text,
   updated_at timestamptz not null default now()

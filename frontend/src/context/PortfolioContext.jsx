@@ -1,22 +1,50 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { getPortfolio } from '@/services/portfolio.js';
 
 const PortfolioContext = createContext(null);
+const CACHE_KEY = 'portfolio_data_cache_v1';
+
+function getCachedPortfolio() {
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY) || localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+function saveCachedPortfolio(value) {
+  try {
+    const raw = JSON.stringify(value);
+    sessionStorage.setItem(CACHE_KEY, raw);
+    localStorage.setItem(CACHE_KEY, raw);
+  } catch {}
+}
 
 export function PortfolioProvider({ children }) {
-  const [status, setStatus] = useState('loading');
-  const [data, setData] = useState(null);
+  const initialDataRef = useRef(getCachedPortfolio());
+  const [data, setData] = useState(() => initialDataRef.current);
+  const [status, setStatus] = useState(() => (initialDataRef.current ? 'ready' : 'loading'));
   const [error, setError] = useState('');
+  const lastFetchedRef = useRef(0);
+  const dataStringRef = useRef(initialDataRef.current ? JSON.stringify(initialDataRef.current) : '');
 
   const load = useCallback(async ({ silent = false } = {}) => {
-    if (!silent) setStatus('loading');
+    if (!silent && !dataStringRef.current) setStatus('loading');
     try {
       const next = await getPortfolio();
-      setData(next);
+      const nextString = JSON.stringify(next);
+      if (nextString !== dataStringRef.current) {
+        dataStringRef.current = nextString;
+        setData(next);
+        saveCachedPortfolio(next);
+      }
       setError('');
       setStatus('ready');
+      lastFetchedRef.current = Date.now();
     } catch (err) {
-      if (!silent) {
+      if (!dataStringRef.current && !silent) {
         setError(err.message || 'Unable to load portfolio');
         setStatus('error');
       }
@@ -24,11 +52,16 @@ export function PortfolioProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    load();
+    load({ silent: Boolean(initialDataRef.current) });
   }, [load]);
 
   useEffect(() => {
-    const onFocus = () => load({ silent: true });
+    const onFocus = () => {
+      // Avoid refetching if fetched within the last 2 minutes
+      if (Date.now() - lastFetchedRef.current > 120000) {
+        load({ silent: true });
+      }
+    };
     window.addEventListener('focus', onFocus);
     return () => window.removeEventListener('focus', onFocus);
   }, [load]);

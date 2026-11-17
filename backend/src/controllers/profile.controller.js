@@ -19,6 +19,14 @@ export const deleteProfilePhoto = asyncHandler(async (req, res) => {
   ok(res, await profileService.deleteProfilePhoto());
 });
 
+export const uploadProfileMedia = asyncHandler(async (req, res) => {
+  ok(res, await profileService.uploadProfileMedia(req.file));
+});
+
+export const deleteProfileMedia = asyncHandler(async (req, res) => {
+  ok(res, await profileService.deleteProfileMedia());
+});
+
 export const getAbout = asyncHandler(async (req, res) => {
   ok(res, await aboutService.getAbout());
 });

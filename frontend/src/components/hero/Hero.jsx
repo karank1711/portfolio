@@ -2,7 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { Button } from '@/components/common/Button.jsx';
 import { Container } from '@/components/common/Container.jsx';
 import { EmptyNote } from '@/components/common/StateMessage.jsx';
-import { SketchPortrait } from '@/components/hero/SketchPortrait.jsx';
+import { ProfileMedia } from '@/components/hero/ProfileMedia.jsx';
 import { RoleRotator } from '@/components/hero/RoleRotator.jsx';
 import { SocialIcon } from '@/components/common/SocialIcon.jsx';
 import { initials } from '@/utils/format.js';
@@ -70,8 +70,13 @@ export function Hero({ profile, about, socialLinks = [] }) {
           <figure className="relative mx-auto w-full max-w-[280px] md:max-w-[320px] lg:max-w-[340px]">
             <span className="pointer-events-none absolute -right-1 top-8 h-20 w-20 rounded-full bg-soft" aria-hidden />
             <div className="relative rounded-[1.6rem] border border-line bg-elevated p-2 shadow-lift">
-              {profile.profileImageUrl ? (
-                <SketchPortrait src={profile.profileImageUrl} alt={profile.fullName} />
+              {profile.profileMediaUrl || profile.profileImageUrl ? (
+                <ProfileMedia
+                  mediaType={profile.profileMediaType || 'image'}
+                  mediaUrl={profile.profileMediaType === 'video' ? profile.profileMediaUrl : (profile.profileImageUrl || profile.profileMediaUrl)}
+                  imageUrl={profile.profileImageUrl}
+                  alt={profile.fullName}
+                />
               ) : (
                 <div className="relative flex aspect-square items-center justify-center rounded-[1.2rem] bg-surface">
                   <span className="font-serif text-5xl text-ink">{initials(profile.fullName)}</span>

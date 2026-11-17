@@ -11,6 +11,7 @@ export const health = asyncHandler(async (req, res) => {
 });
 
 export const portfolio = asyncHandler(async (req, res) => {
+  res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
   ok(res, await portfolioService.getPublicPortfolio());
 });
 

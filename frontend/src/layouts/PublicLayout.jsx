@@ -39,6 +39,9 @@ export function PublicLayout() {
         <meta property="og:type" content="website" />
         {siteUrl ? <meta property="og:url" content={siteUrl} /> : null}
         {profile?.profileImageUrl ? <meta property="og:image" content={profile.profileImageUrl} /> : null}
+        {profile?.profileMediaType !== 'video' && (profile?.profileMediaUrl || profile?.profileImageUrl) ? (
+          <link rel="preload" as="image" href={profile.profileMediaUrl || profile.profileImageUrl} fetchpriority="high" />
+        ) : null}
         <meta name="twitter:card" content="summary_large_image" />
         {jsonLd ? <script type="application/ld+json">{JSON.stringify(jsonLd)}</script> : null}
       </Helmet>

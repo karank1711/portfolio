@@ -13,6 +13,10 @@ const server = app.listen(env.port, () => {
   });
 });
 
+server.timeout = 300000;
+server.keepAliveTimeout = 305000;
+server.headersTimeout = 310000;
+
 server.on('error', (error) => {
   console.error(error);
   process.exit(1);

@@ -8,7 +8,21 @@ import { getResume } from './resume.service.js';
 import { listSkills } from './skill.service.js';
 import { listSocialLinks } from './social.service.js';
 
+let cachedPortfolio = null;
+let cachedPortfolioTime = 0;
+const CACHE_TTL_MS = 5 * 60 * 1000;
+
+export function invalidatePortfolioCache() {
+  cachedPortfolio = null;
+  cachedPortfolioTime = 0;
+}
+
 export async function getPublicPortfolio() {
+  const now = Date.now();
+  if (cachedPortfolio && now - cachedPortfolioTime < CACHE_TTL_MS) {
+    return cachedPortfolio;
+  }
+
   const [profile, about, skills, experiences, education, projects, achievements, socialLinks, resume] = await Promise.all([
     getProfile(),
     getAbout(),
@@ -21,5 +35,8 @@ export async function getPublicPortfolio() {
     getResume(),
   ]);
 
-  return { profile, about, skills, experiences, education, projects, achievements, socialLinks, resume };
+  const result = { profile, about, skills, experiences, education, projects, achievements, socialLinks, resume };
+  cachedPortfolio = result;
+  cachedPortfolioTime = now;
+  return result;
 }

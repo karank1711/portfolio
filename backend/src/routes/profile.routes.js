@@ -9,6 +9,8 @@ const router = Router();
 
 router.get('/', profile.getProfile);
 router.put('/', requireAuth, validate(profileSchema), profile.saveProfile);
+router.post('/media', requireAuth, upload.single('media'), profile.uploadProfileMedia);
+router.delete('/media', requireAuth, profile.deleteProfileMedia);
 router.post('/photo', requireAuth, upload.single('photo'), profile.uploadProfilePhoto);
 router.delete('/photo', requireAuth, profile.deleteProfilePhoto);
 

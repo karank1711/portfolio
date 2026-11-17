@@ -23,7 +23,7 @@ export function Experience({ items = [] }) {
                       <h3 className="font-serif text-2xl text-ink">{item.role}</h3>
                       <p className="mt-1 flex items-center gap-2 text-sm text-muted">
                         {item.companyLogoUrl ? (
-                          <img src={item.companyLogoUrl} alt="" className="h-5 w-5 object-contain" />
+                          <img src={item.companyLogoUrl} alt="" loading="lazy" decoding="async" className="h-5 w-5 object-contain" />
                         ) : null}
                         <span>
                           {item.company}
