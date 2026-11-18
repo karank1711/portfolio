@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/common/Button.jsx';
@@ -14,13 +14,31 @@ export default function ProjectPage() {
   const [params] = useSearchParams();
   const preview = params.get('preview') || '';
   const { data } = usePortfolio();
-  const [status, setStatus] = useState('loading');
-  const [project, setProject] = useState(null);
+
+  // Instant render from PortfolioContext if project is already loaded
+  const cached = useMemo(() => {
+    if (preview) return null;
+    return data?.projects?.find((item) => item.slug === slug) || null;
+  }, [data?.projects, slug, preview]);
+
+  const [project, setProject] = useState(cached);
+  const [status, setStatus] = useState(() => (cached ? 'ready' : 'loading'));
   const [error, setError] = useState('');
+
+  // Update immediately when slug changes if cached version exists
+  useEffect(() => {
+    if (cached) {
+      setProject(cached);
+      setStatus('ready');
+    }
+  }, [cached]);
 
   useEffect(() => {
     let active = true;
-    setStatus('loading');
+    if (!cached) {
+      setStatus('loading');
+    }
+
     getProject(slug, preview)
       .then((next) => {
         if (!active) return;
@@ -29,13 +47,16 @@ export default function ProjectPage() {
       })
       .catch((err) => {
         if (!active) return;
-        setError(err.message || 'Project not found');
-        setStatus('error');
+        if (!cached) {
+          setError(err.message || 'Project not found');
+          setStatus('error');
+        }
       });
+
     return () => {
       active = false;
     };
-  }, [slug, preview]);
+  }, [slug, preview, cached]);
 
   if (status === 'loading') {
     return (
@@ -67,6 +88,7 @@ export default function ProjectPage() {
         <meta property="og:title" content={project.name} />
         <meta property="og:description" content={description} />
         {project.coverImageUrl ? <meta property="og:image" content={project.coverImageUrl} /> : null}
+        {project.coverImageUrl ? <link rel="preload" as="image" href={project.coverImageUrl} fetchpriority="high" /> : null}
       </Helmet>
       <ProjectDetails
         project={project}

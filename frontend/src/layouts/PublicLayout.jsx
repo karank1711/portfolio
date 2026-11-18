@@ -42,6 +42,9 @@ export function PublicLayout() {
         {profile?.profileMediaType !== 'video' && (profile?.profileMediaUrl || profile?.profileImageUrl) ? (
           <link rel="preload" as="image" href={profile.profileMediaUrl || profile.profileImageUrl} fetchpriority="high" />
         ) : null}
+        {data?.projects?.[0]?.coverImageUrl ? (
+          <link rel="preload" as="image" href={data.projects[0].coverImageUrl} fetchpriority="high" />
+        ) : null}
         <meta name="twitter:card" content="summary_large_image" />
         {jsonLd ? <script type="application/ld+json">{JSON.stringify(jsonLd)}</script> : null}
       </Helmet>

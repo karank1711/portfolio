@@ -7,18 +7,18 @@ import { SectionHeading } from '@/components/common/SectionHeading.jsx';
 import { RESUME_URL } from '@/utils/resume.js';
 
 export function About({ about, profile }) {
-  const highlights = about?.highlights || [];
-  const hasContent = about && (about.summary || about.personalIntro || about.currentEducation || highlights.length);
+  const highlights = Array.isArray(about?.highlights) ? about.highlights : [];
+  const hasContent = Boolean(about && (about.summary || about.personalIntro || about.currentEducation || highlights.length));
   const facts = [
     profile?.location ? { icon: MapPin, label: 'Location', value: profile.location } : null,
     about?.currentEducation ? { icon: GraduationCap, label: 'Degree', value: about.currentEducation } : null,
     profile?.email ? { icon: Mail, label: 'Email', value: profile.email, href: `mailto:${profile.email}` } : null,
     profile?.phone ? { icon: Phone, label: 'Phone', value: profile.phone, href: `tel:${profile.phone}` } : null,
-    ...highlights.map((item) => ({ label: item.label, value: item.value })),
-  ].filter((item) => item?.value);
+    ...highlights.map((item) => ({ label: item?.label, value: item?.value })),
+  ].filter((item) => item?.value && typeof item.value !== 'object');
 
   return (
-    <Section id="about">
+    <Section id="about" className="!pt-6 sm:!pt-8 md:!pt-12">
       {!hasContent && facts.length === 0 ? (
         <>
           <SectionHeading eyebrow="About me" title="About" />

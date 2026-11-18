@@ -8,7 +8,6 @@ import { api, uploadWithProgress } from '@/services/api.js';
 const empty = {
   fullName: '',
   professionalTitle: '',
-  rolesText: '',
   shortIntro: '',
   location: '',
   email: '',
@@ -40,10 +39,13 @@ export default function ProfilePage() {
     setStatus('loading');
     try {
       const profile = await api('/profile');
+      const loadedTitle = profile?.professionalTitle?.includes('\n')
+        ? profile.professionalTitle
+        : (profile?.roles?.length > 1 ? profile.roles.join('\n') : (profile?.professionalTitle || ''));
+
       setForm({
         fullName: profile?.fullName || '',
-        professionalTitle: profile?.professionalTitle || '',
-        rolesText: (profile?.roles || []).join('\n'),
+        professionalTitle: loadedTitle,
         shortIntro: profile?.shortIntro || '',
         location: profile?.location || '',
         email: profile?.email || '',
@@ -75,7 +77,6 @@ export default function ProfilePage() {
         body: {
           fullName: form.fullName,
           professionalTitle: form.professionalTitle,
-          roles: form.rolesText.split('\n').map((item) => item.trim()).filter(Boolean),
           shortIntro: form.shortIntro,
           location: form.location,
           email: form.email,
@@ -98,7 +99,6 @@ export default function ProfilePage() {
         body: {
           fullName: form.fullName,
           professionalTitle: form.professionalTitle,
-          roles: form.rolesText.split('\n').map((item) => item.trim()).filter(Boolean),
           shortIntro: form.shortIntro,
           location: form.location,
           email: form.email,
@@ -339,14 +339,24 @@ export default function ProfilePage() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Name"><TextInput name="fullName" required value={form.fullName} onChange={update} /></Field>
-        <Field label="Professional title"><TextInput name="professionalTitle" value={form.professionalTitle} onChange={update} /></Field>
         <Field label="Location"><TextInput name="location" value={form.location} onChange={update} /></Field>
         <Field label="Email"><TextInput name="email" type="email" value={form.email} onChange={update} /></Field>
         <Field label="Phone"><TextInput name="phone" value={form.phone} onChange={update} /></Field>
       </div>
-      <Field label="Rotating roles" hint="One role per line. These animate in the hero.">
-        <TextArea name="rolesText" value={form.rolesText} onChange={update} />
+
+      <Field
+        label="Professional title"
+        hint="One title per line. These animate smoothly in the hero section."
+      >
+        <TextArea
+          name="professionalTitle"
+          rows={5}
+          placeholder={"Full Stack Developer\nAI & ML Developer\nSoftware Developer\nData Analyst\nMERN Stack Developer"}
+          value={form.professionalTitle}
+          onChange={update}
+        />
       </Field>
+
       <Field label="Short introduction">
         <TextArea name="shortIntro" value={form.shortIntro} onChange={update} />
       </Field>

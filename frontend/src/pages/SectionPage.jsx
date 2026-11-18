@@ -40,10 +40,12 @@ const PAGES = {
   },
 };
 
-export function SectionPage({ name }) {
+export default function SectionPage({ name }) {
   const page = PAGES[name];
   const { data } = usePortfolio();
   const person = data?.profile?.fullName;
+
+  if (!page) return null;
 
   return (
     <PortfolioGate>
@@ -58,3 +60,5 @@ export function SectionPage({ name }) {
     </PortfolioGate>
   );
 }
+
+export { SectionPage };

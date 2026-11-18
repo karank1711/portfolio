@@ -30,13 +30,13 @@ export function Navbar() {
 
   return (
     <header className={`sticky top-0 z-40 border-b transition ${scrolled || open ? 'border-line bg-bg/90 backdrop-blur-md' : 'border-transparent bg-bg/75 backdrop-blur-md'}`}>
-      <div className="mx-auto flex h-16 max-w-page items-center justify-between gap-4 px-5 sm:px-8">
+      <div className="mx-auto flex h-16 max-w-page items-center justify-between gap-4 lg:gap-6 px-5 sm:px-8">
         <NavLink to="/" end className="flex min-w-0 items-center gap-2.5 text-ink">
           <Mark letters={initials(name)} />
           <span className="truncate font-serif text-lg leading-none">{name}</span>
         </NavLink>
 
-        <nav className="hidden items-center gap-3.5 lg:flex" aria-label="Primary">
+        <nav className="hidden items-center lg:flex lg:gap-6 xl:gap-8" aria-label="Primary">
           {NAV_ITEMS.map((item) => (
             <NavLink key={item.path} to={item.path} end={item.path === '/'} className={linkClass}>
               {item.label}

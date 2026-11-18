@@ -57,13 +57,17 @@ export function PortfolioProvider({ children }) {
 
   useEffect(() => {
     const onFocus = () => {
-      // Avoid refetching if fetched within the last 2 minutes
-      if (Date.now() - lastFetchedRef.current > 120000) {
+      // Refetch if tab regains focus and at least 5 seconds have elapsed
+      if (Date.now() - lastFetchedRef.current > 5000) {
         load({ silent: true });
       }
     };
     window.addEventListener('focus', onFocus);
-    return () => window.removeEventListener('focus', onFocus);
+    window.addEventListener('visibilitychange', onFocus);
+    return () => {
+      window.removeEventListener('focus', onFocus);
+      window.removeEventListener('visibilitychange', onFocus);
+    };
   }, [load]);
 
   const value = useMemo(() => ({ status, data, error, reload: () => load() }), [status, data, error, load]);

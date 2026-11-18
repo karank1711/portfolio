@@ -6,6 +6,7 @@ import { Container } from '@/components/common/Container.jsx';
 import { Reveal } from '@/components/common/Reveal.jsx';
 import { ProjectCover } from '@/components/projects/ProjectCover.jsx';
 import { normalizeProject } from '@/data/projects.js';
+import { prefetchProject } from '@/services/portfolio.js';
 
 export function ProjectDetails({ project, number, previous, next }) {
   const item = normalizeProject(project);
@@ -45,7 +46,7 @@ export function ProjectDetails({ project, number, previous, next }) {
 
         {item.coverImage ? (
           <div className="mt-10">
-            <ProjectCover src={item.coverImage} alt={item.title} />
+            <ProjectCover src={item.coverImage} alt={item.title} priority />
           </div>
         ) : null}
 
@@ -103,12 +104,15 @@ export function ProjectDetails({ project, number, previous, next }) {
             <SectionTitle>Screenshots</SectionTitle>
             <div className="mt-5 grid gap-5">
               {item.images.map((image) => (
-                <div key={image.id || image.url} className="flex justify-center overflow-hidden rounded-2xl bg-surface p-3">
+                <div key={image.id || image.url} className="flex justify-center overflow-hidden rounded-2xl bg-surface/60 p-3">
                   <img
                     src={image.url}
                     alt={image.alt || item.title}
                     loading="lazy"
-                    className="h-auto max-h-[70vh] w-auto max-w-full"
+                    decoding="async"
+                    width={1400}
+                    height={800}
+                    className="h-auto max-h-[70vh] w-auto max-w-full rounded-lg transition-opacity duration-300"
                   />
                 </div>
               ))}
@@ -119,7 +123,12 @@ export function ProjectDetails({ project, number, previous, next }) {
         {previousView || nextView ? (
           <nav className="mt-16 grid gap-4 border-t border-line pt-8 sm:grid-cols-2" aria-label="More projects">
             {previousView ? (
-              <Link to={`/projects/${previousView.slug}`} className="group rounded-2xl border border-line px-5 py-4 transition hover:border-ink">
+              <Link
+                to={`/projects/${previousView.slug}`}
+                className="group rounded-2xl border border-line px-5 py-4 transition hover:border-ink"
+                onMouseEnter={() => prefetchProject(previousView.slug)}
+                onTouchStart={() => prefetchProject(previousView.slug)}
+              >
                 <span className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.16em] text-faint">
                   <ArrowLeft size={13} aria-hidden />
                   Previous
@@ -128,7 +137,12 @@ export function ProjectDetails({ project, number, previous, next }) {
               </Link>
             ) : <span />}
             {nextView ? (
-              <Link to={`/projects/${nextView.slug}`} className="rounded-2xl border border-line px-5 py-4 transition hover:border-ink sm:text-right">
+              <Link
+                to={`/projects/${nextView.slug}`}
+                className="rounded-2xl border border-line px-5 py-4 transition hover:border-ink sm:text-right"
+                onMouseEnter={() => prefetchProject(nextView.slug)}
+                onTouchStart={() => prefetchProject(nextView.slug)}
+              >
                 <span className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.16em] text-faint">
                   Next
                   <ArrowRight size={13} aria-hidden />

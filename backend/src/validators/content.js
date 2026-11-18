@@ -8,8 +8,8 @@ const highlightSchema = z.object({
 
 export const profileSchema = z.object({
   fullName: z.string().trim().min(1, 'Name is required').max(120),
-  professionalTitle: z.string().trim().max(160).optional().default(''),
-  roles: z.array(z.string().trim().min(1).max(80)).max(8).optional().default([]),
+  professionalTitle: z.string().trim().max(2000).optional().default(''),
+  roles: z.array(z.string().trim().min(1).max(120)).max(20).optional().default([]),
   shortIntro: z.string().trim().max(600).optional().default(''),
   location: z.string().trim().max(120).optional().default(''),
   email: z.union([z.string().trim().email('Enter a valid email').max(254), z.literal('')]).optional().default(''),

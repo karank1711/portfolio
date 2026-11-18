@@ -20,9 +20,26 @@ const profile = createSingleton({
   },
 });
 
-export const getProfile = profile.get;
+export async function getProfile() {
+  const row = await profile.get();
+  if (!row) return null;
+  // Backward compatibility: If professionalTitle does not have multiple lines but roles has multiple items, pre-fill from roles
+  if (Array.isArray(row.roles) && row.roles.length > 1 && (!row.professionalTitle || !row.professionalTitle.includes('\n'))) {
+    row.professionalTitle = row.roles.join('\n');
+  }
+  return row;
+}
+
 export async function saveProfile(input) {
-  const result = await profile.save(input);
+  const payload = { ...input };
+  if (typeof payload.professionalTitle === 'string') {
+    const titles = payload.professionalTitle
+      .split('\n')
+      .map((t) => t.trim())
+      .filter(Boolean);
+    payload.roles = titles;
+  }
+  const result = await profile.save(payload);
   invalidatePortfolioCache();
   return result;
 }

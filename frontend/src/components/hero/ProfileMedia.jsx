@@ -37,7 +37,7 @@ export function ProfileMedia({
   }, [isVideo, mediaUrl]);
 
   return (
-    <div className="relative aspect-square w-full overflow-hidden rounded-[1.2rem] bg-surface">
+    <div className="relative aspect-square w-full overflow-hidden rounded-[0.9rem] sm:rounded-[1.2rem] bg-surface">
       {isVideo ? (
         <video
           ref={videoRef}
@@ -56,7 +56,7 @@ export function ProfileMedia({
           src={activeImage}
           alt={alt}
           crossOrigin="anonymous"
-          fetchPriority="high"
+          fetchpriority="high"
           decoding="async"
           className="absolute inset-0 h-full w-full object-cover"
         />
