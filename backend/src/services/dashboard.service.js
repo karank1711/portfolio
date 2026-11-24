@@ -40,6 +40,7 @@ export async function getDashboard() {
     recentProjects,
     recentMessages,
     recentMessageDates,
+    skillCategories,
   ] = await Promise.all([
     countOf('projects'),
     countOf('skills'),
@@ -55,11 +56,22 @@ export async function getDashboard() {
     getSupabase().from('projects').select('id, name, category, status, is_featured, is_published, updated_at').order('updated_at', { ascending: false }).limit(5),
     getSupabase().from('contact_messages').select('id, name, email, message, is_read, created_at').order('created_at', { ascending: false }).limit(5),
     getSupabase().from('contact_messages').select('created_at').gte('created_at', since.toISOString()),
+    getSupabase().from('skills').select('category'),
   ]);
 
   if (recentProjects.error) throw mapDbError(recentProjects.error);
   if (recentMessages.error) throw mapDbError(recentMessages.error);
   if (recentMessageDates.error) throw mapDbError(recentMessageDates.error);
+  if (skillCategories.error) throw mapDbError(skillCategories.error);
+
+  const skillGroupCounts = new Map();
+  for (const row of skillCategories.data || []) {
+    const category = row.category || 'Other';
+    skillGroupCounts.set(category, (skillGroupCounts.get(category) || 0) + 1);
+  }
+  const skillGroups = [...skillGroupCounts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .map(([category, count]) => ({ category, count }));
 
   const countsByDay = new Map();
   for (const row of recentMessageDates.data || []) {
@@ -86,6 +98,7 @@ export async function getDashboard() {
     recentProjects: (recentProjects.data || []).map((row) => toCamel(row)),
     recentMessages: (recentMessages.data || []).map((row) => toCamel(row)),
     messageSeries,
+    skillGroups,
     status: {
       hasName: Boolean(profile?.fullName),
       hasPhoto: Boolean(profile?.profileImageUrl),

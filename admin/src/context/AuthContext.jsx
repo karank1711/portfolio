@@ -5,7 +5,8 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [status, setStatus] = useState('loading');
+  // If a token already exists, render the shell immediately and verify in the background.
+  const [status, setStatus] = useState(() => (getToken() ? 'authenticated' : 'anonymous'));
 
   useEffect(() => {
     const onUnauthorized = () => {
@@ -17,10 +18,12 @@ export function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    if (!getToken()) {
+    const token = getToken();
+    if (!token) {
       setStatus('anonymous');
       return undefined;
     }
+
     let active = true;
     api('/auth/me')
       .then((admin) => {
@@ -31,8 +34,10 @@ export function AuthProvider({ children }) {
       .catch(() => {
         if (!active) return;
         setToken(null);
+        setUser(null);
         setStatus('anonymous');
       });
+
     return () => {
       active = false;
     };

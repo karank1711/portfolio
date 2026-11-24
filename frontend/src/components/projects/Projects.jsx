@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useReducedMotion } from 'framer-motion';
 import { EmptyNote } from '@/components/common/StateMessage.jsx';
 import { Reveal } from '@/components/common/Reveal.jsx';
 import { Section } from '@/components/common/Container.jsx';
 import { SectionHeading } from '@/components/common/SectionHeading.jsx';
 import { ProjectCard } from '@/components/projects/ProjectCard.jsx';
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion.js';
 
 function ProjectRevealItem({ children, index = 0 }) {
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const ref = useRef(null);
   // Initially show only the first project (index === 0)
   const [isVisible, setIsVisible] = useState(() => index === 0 || Boolean(reduce));

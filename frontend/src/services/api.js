@@ -11,15 +11,19 @@ function apiBase() {
   return base.endsWith('/api') ? base : `${base}/api`;
 }
 
-export async function api(path, { method = 'GET', body } = {}) {
+export async function api(path, { method = 'GET', body, signal } = {}) {
   let response;
   try {
     response = await fetch(`${apiBase()}${path}`, {
       method,
       headers: body ? { 'Content-Type': 'application/json' } : undefined,
       body: body ? JSON.stringify(body) : undefined,
+      signal,
+      // Public GETs can reuse browser/CDN cache headers set by the API.
+      cache: method === 'GET' ? 'default' : 'no-store',
     });
-  } catch {
+  } catch (error) {
+    if (error?.name === 'AbortError') throw error;
     throw new ApiError('Unable to reach the server. Check that the API is running.', 0);
   }
 

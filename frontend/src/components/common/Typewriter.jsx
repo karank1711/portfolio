@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useReducedMotion } from 'framer-motion';
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion.js';
 
 /**
  * Reusable Typewriter component.
@@ -22,7 +22,7 @@ export function Typewriter({
   className = '',
   wrapper: Wrapper = 'span',
 }) {
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
 
   // Normalize input words: supports array of strings, single string, or text prop
   // Also cleanly splits multiline newline-separated strings

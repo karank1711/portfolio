@@ -15,6 +15,7 @@ import {
   socialPatchSchema,
   socialSchema,
 } from '../validators/content.js';
+import { resumeUrlSchema } from '../validators/resume.js';
 import * as content from '../controllers/content.controller.js';
 
 function orderedRoutes({
@@ -95,5 +96,5 @@ export const socialRouter = orderedRoutes({
 
 export const resumeRouter = Router();
 resumeRouter.get('/', content.getResume);
-resumeRouter.post('/', requireAuth, upload.single('resume'), content.uploadResume);
+resumeRouter.put('/', requireAuth, validate(resumeUrlSchema), content.saveResume);
 resumeRouter.delete('/', requireAuth, content.deleteResume);

@@ -4,9 +4,10 @@ import { EmptyNote } from '@/components/common/StateMessage.jsx';
 import { Reveal } from '@/components/common/Reveal.jsx';
 import { Section } from '@/components/common/Container.jsx';
 import { SectionHeading } from '@/components/common/SectionHeading.jsx';
-import { RESUME_URL } from '@/utils/resume.js';
+import { resumeHref } from '@/utils/resume.js';
 
-export function About({ about, profile }) {
+export function About({ about, profile, resume }) {
+  const resumeUrl = resumeHref(resume);
   const highlights = Array.isArray(about?.highlights) ? about.highlights : [];
   const hasContent = Boolean(about && (about.summary || about.personalIntro || about.currentEducation || highlights.length));
   const facts = [
@@ -32,12 +33,14 @@ export function About({ about, profile }) {
               {about?.summary ? <p className="font-serif text-2xl leading-snug text-ink">{about.summary}</p> : null}
               {about?.personalIntro ? <p className="whitespace-pre-wrap">{about.personalIntro}</p> : null}
             </div>
-            <div className="mt-8">
-              <Button href={RESUME_URL} variant="secondary" target="_blank" rel="noreferrer">
-                <Download size={15} aria-hidden />
+            {resumeUrl ? (
+              <div className="mt-8">
+                <Button href={resumeUrl} variant="secondary" target="_blank" rel="noreferrer">
+                  <Download size={15} aria-hidden />
                   View Resume
-              </Button>
-            </div>
+                </Button>
+              </div>
+            ) : null}
           </Reveal>
           {facts.length ? (
             <Reveal delay={0.08}>

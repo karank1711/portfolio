@@ -65,7 +65,7 @@ export const deleteSocial = asyncHandler(async (req, res) => {
 export const reorderSocial = asyncHandler(async (req, res) => ok(res, await socialService.reorderSocialLinks(req.body.ids)));
 
 export const getResume = asyncHandler(async (req, res) => ok(res, await resumeService.getResume()));
-export const uploadResume = asyncHandler(async (req, res) => ok(res, await resumeService.uploadResume(req.file)));
+export const saveResume = asyncHandler(async (req, res) => ok(res, await resumeService.saveResumeUrl(req.body.fileUrl)));
 export const deleteResume = asyncHandler(async (req, res) => {
   await resumeService.deleteResume();
   ok(res, { deleted: true });

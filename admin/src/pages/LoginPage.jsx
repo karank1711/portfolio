@@ -50,7 +50,7 @@ export default function LoginPage() {
               {show ? 'Hide password' : 'Show password'}
             </button>
             {error ? <p className="text-sm text-accent">{error}</p> : null}
-            <Button type="submit" disabled={submitting || status === 'loading'}>{submitting ? 'Signing in…' : 'Sign in'}</Button>
+            <Button type="submit" disabled={submitting}>{submitting ? 'Signing in…' : 'Sign in'}</Button>
           </div>
         </form>
       </div>

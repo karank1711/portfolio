@@ -1,26 +1,22 @@
-import { About } from '@/components/about/About.jsx';
-import { Achievements } from '@/components/achievements/Achievements.jsx';
-import { Contact } from '@/components/contact/Contact.jsx';
-import { Education } from '@/components/education/Education.jsx';
-import { Experience } from '@/components/experience/Experience.jsx';
+import { lazy, Suspense } from 'react';
 import { Hero } from '@/components/hero/Hero.jsx';
-import { Projects } from '@/components/projects/Projects.jsx';
-import { Skills } from '@/components/skills/Skills.jsx';
 import { PortfolioGate } from '@/pages/PortfolioGate.jsx';
+
+const HomeBelowFold = lazy(() => import('@/pages/HomeBelowFold.jsx'));
+
+function BelowFoldFallback() {
+  return <div className="mx-auto max-w-page px-5 py-16" aria-hidden />;
+}
 
 export function HomePage() {
   return (
     <PortfolioGate>
       {(data) => (
         <>
-          <Hero profile={data.profile} about={data.about} socialLinks={data.socialLinks || []} />
-          <About about={data.about} profile={data.profile} />
-          <Skills skills={data.skills || []} />
-          <Experience items={data.experiences || []} />
-          <Education items={data.education || []} />
-          <Projects projects={data.projects || []} showViewAll />
-          <Achievements items={data.achievements || []} />
-          <Contact profile={data.profile} socialLinks={data.socialLinks || []} />
+          <Hero profile={data.profile} about={data.about} socialLinks={data.socialLinks || []} resume={data.resume} />
+          <Suspense fallback={<BelowFoldFallback />}>
+            <HomeBelowFold data={data} />
+          </Suspense>
         </>
       )}
     </PortfolioGate>

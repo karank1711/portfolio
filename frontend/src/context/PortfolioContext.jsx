@@ -57,8 +57,9 @@ export function PortfolioProvider({ children }) {
 
   useEffect(() => {
     const onFocus = () => {
-      // Refetch if tab regains focus and at least 5 seconds have elapsed
-      if (Date.now() - lastFetchedRef.current > 5000) {
+      if (document.visibilityState && document.visibilityState !== 'visible') return;
+      // Avoid hammering Render on every tab switch; 30s is enough for CMS freshness.
+      if (Date.now() - lastFetchedRef.current > 30000) {
         load({ silent: true });
       }
     };

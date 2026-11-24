@@ -56,8 +56,10 @@ export function ProfileMedia({
           src={activeImage}
           alt={alt}
           crossOrigin="anonymous"
-          fetchpriority="high"
+          fetchPriority="high"
           decoding="async"
+          width={680}
+          height={680}
           className="absolute inset-0 h-full w-full object-cover"
         />
       ) : null}

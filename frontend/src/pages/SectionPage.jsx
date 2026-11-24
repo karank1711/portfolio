@@ -12,7 +12,7 @@ import { PortfolioGate } from '@/pages/PortfolioGate.jsx';
 const PAGES = {
   about: {
     title: 'About',
-    render: (data) => <About about={data.about} profile={data.profile} />,
+    render: (data) => <About about={data.about} profile={data.profile} resume={data.resume} />,
   },
   skills: {
     title: 'Skills',

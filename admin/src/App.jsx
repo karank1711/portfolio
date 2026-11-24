@@ -1,8 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { AdminLayout } from '@/layouts/AdminLayout.jsx';
 import LoginPage from '@/pages/LoginPage.jsx';
 
+const AdminLayout = lazy(() => import('@/layouts/AdminLayout.jsx').then((m) => ({ default: m.AdminLayout })));
 const DashboardPage = lazy(() => import('@/pages/DashboardPage.jsx'));
 const ProfilePage = lazy(() => import('@/pages/ProfilePage.jsx'));
 const AboutPage = lazy(() => import('@/pages/AboutPage.jsx'));
@@ -25,7 +25,13 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
-      <Route element={<AdminLayout />}>
+      <Route
+        element={(
+          <Suspense fallback={<div className="grid min-h-screen place-items-center text-sm text-muted">Loading admin…</div>}>
+            <AdminLayout />
+          </Suspense>
+        )}
+      >
         <Route path="/" element={<Screen><DashboardPage /></Screen>} />
         <Route path="/profile" element={<Screen><ProfilePage /></Screen>} />
         <Route path="/about" element={<Screen><AboutPage /></Screen>} />

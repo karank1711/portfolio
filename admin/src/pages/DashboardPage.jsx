@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Award, Check, Folder, Mail, Medal, Star, UserRound } from 'lucide-react';
-import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { ErrorState, LoadingBlock } from '@/components/Modal.jsx';
 import { useTheme } from '@/context/ThemeContext.jsx';
 import { api } from '@/services/api.js';
+
+const MessageChart = lazy(() => import('@/components/MessageChart.jsx').then((m) => ({ default: m.MessageChart })));
 
 const STATS = [
   { key: 'projects', label: 'Projects', to: '/projects', icon: Folder },
@@ -27,32 +28,18 @@ function formatDay(value) {
   });
 }
 
-function skillGroups(skills) {
-  const groups = new Map();
-  for (const skill of skills) {
-    const category = skill.category || 'Other';
-    groups.set(category, (groups.get(category) || 0) + 1);
-  }
-  return [...groups.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-}
-
 export default function DashboardPage() {
   const { theme } = useTheme();
   const [status, setStatus] = useState('loading');
   const [error, setError] = useState('');
   const [data, setData] = useState(null);
-  const [skills, setSkills] = useState(null);
 
   useEffect(() => {
     let active = true;
-    Promise.all([
-      api('/dashboard'),
-      api('/skills').catch(() => null),
-    ])
-      .then(([payload, skillList]) => {
+    api('/dashboard')
+      .then((payload) => {
         if (!active) return;
         setData(payload);
-        setSkills(Array.isArray(skillList) ? skillList : null);
         setStatus('ready');
       })
       .catch((err) => {
@@ -82,7 +69,7 @@ export default function DashboardPage() {
     ...point,
     label: formatDay(point.date),
   }));
-  const groups = skills ? skillGroups(skills) : [];
+  const groups = Array.isArray(data.skillGroups) ? data.skillGroups : [];
 
   return (
     <div className="grid gap-4">
@@ -122,28 +109,9 @@ export default function DashboardPage() {
         <section className={`${cardClass} min-w-0 p-4 sm:p-5`}>
           <h2 className="font-serif text-2xl text-ink">Messages, last 14 days</h2>
           <div className="mt-4 h-52">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={series} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="message-fill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={accent} stopOpacity={0.38} />
-                    <stop offset="100%" stopColor={accent} stopOpacity={0.02} />
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="label" tick={tick} interval={2} axisLine={false} tickLine={false} />
-                <YAxis allowDecimals={false} width={28} tick={tick} axisLine={false} tickLine={false} />
-                <Tooltip
-                  formatter={(value) => [value, 'Messages']}
-                  contentStyle={{
-                    background: theme === 'dark' ? '#1c1b18' : '#fbf9f6',
-                    border: theme === 'dark' ? '1px solid #302d29' : '1px solid #ddd6cc',
-                    borderRadius: 12,
-                    fontSize: 12,
-                  }}
-                />
-                <Area type="monotone" dataKey="count" stroke={accent} fill="url(#message-fill)" strokeWidth={2} dot={{ r: 3, fill: accent, strokeWidth: 0 }} />
-              </AreaChart>
-            </ResponsiveContainer>
+            <Suspense fallback={<div className="h-full animate-pulse rounded-xl bg-surface" />}>
+              <MessageChart series={series} accent={accent} tick={tick} theme={theme} />
+            </Suspense>
           </div>
         </section>
 
@@ -190,18 +158,16 @@ export default function DashboardPage() {
             <h2 className="font-serif text-xl text-ink">Skill Proficiency Growth</h2>
             <p className="mt-1 text-xs text-muted">Current skills by category.</p>
           </div>
-          {skills === null ? <p className="px-4 py-6 text-sm text-muted">Skill details could not be loaded.</p> : null}
-          {skills && groups.length === 0 ? <p className="px-4 py-6 text-sm text-muted">No skills yet.</p> : null}
-          {groups.length > 0 ? (
+          {groups.length === 0 ? <p className="px-4 py-6 text-sm text-muted">No skills yet.</p> : (
             <ul>
-              {groups.map(([category, count]) => (
+              {groups.map(({ category, count }) => (
                 <li key={category} className="flex items-center justify-between gap-3 border-b border-line px-4 py-2.5 text-sm last:border-b-0">
                   <span className="min-w-0 truncate text-ink">{category}</span>
                   <span className="shrink-0 text-faint">{count}</span>
                 </li>
               ))}
             </ul>
-          ) : null}
+          )}
         </section>
 
         <section className={`${cardClass} lg:col-span-2 xl:col-span-1`}>

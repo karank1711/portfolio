@@ -40,10 +40,7 @@ export function PublicLayout() {
         {siteUrl ? <meta property="og:url" content={siteUrl} /> : null}
         {profile?.profileImageUrl ? <meta property="og:image" content={profile.profileImageUrl} /> : null}
         {profile?.profileMediaType !== 'video' && (profile?.profileMediaUrl || profile?.profileImageUrl) ? (
-          <link rel="preload" as="image" href={profile.profileMediaUrl || profile.profileImageUrl} fetchpriority="high" />
-        ) : null}
-        {data?.projects?.[0]?.coverImageUrl ? (
-          <link rel="preload" as="image" href={data.projects[0].coverImageUrl} fetchpriority="high" />
+          <link rel="preload" as="image" href={profile.profileMediaUrl || profile.profileImageUrl} fetchPriority="high" />
         ) : null}
         <meta name="twitter:card" content="summary_large_image" />
         {jsonLd ? <script type="application/ld+json">{JSON.stringify(jsonLd)}</script> : null}

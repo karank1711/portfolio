@@ -1,16 +1,17 @@
-import { motion, useReducedMotion } from 'framer-motion';
 import { Button } from '@/components/common/Button.jsx';
 import { Container } from '@/components/common/Container.jsx';
 import { EmptyNote } from '@/components/common/StateMessage.jsx';
 import { ProfileMedia } from '@/components/hero/ProfileMedia.jsx';
 import { RoleRotator } from '@/components/hero/RoleRotator.jsx';
 import { SocialIcon } from '@/components/common/SocialIcon.jsx';
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion.js';
 import { initials } from '@/utils/format.js';
-import { RESUME_URL } from '@/utils/resume.js';
+import { resumeHref } from '@/utils/resume.js';
 import { isExternal, socialHref } from '@/utils/social.js';
 
-export function Hero({ profile, about, socialLinks = [] }) {
-  const reduce = useReducedMotion();
+export function Hero({ profile, about, socialLinks = [], resume }) {
+  const resumeUrl = resumeHref(resume);
+  const reduce = usePrefersReducedMotion();
   if (!profile?.fullName && !profile?.shortIntro) {
     return (
       <section className="py-24">
@@ -33,17 +34,12 @@ export function Hero({ profile, about, socialLinks = [] }) {
     : (profile.roles?.length ? profile.roles : []);
 
   const caption = about?.currentEducation || roles[0] || '';
-  const motionProps = reduce ? {} : {
-    initial: { opacity: 0, y: 12 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
-  };
 
   return (
     <section className="overflow-x-clip pb-2 sm:pb-3 md:pb-5 pt-6 sm:pt-12 md:pt-20">
       <Container>
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3.5 sm:gap-8 md:gap-12 lg:gap-16">
-          <motion.div {...motionProps} className="min-w-0">
+          <div className={`min-w-0 ${reduce ? '' : 'hero-enter'}`}>
             <p className="text-xs sm:text-sm text-muted">Hi, I&apos;m</p>
             <h1 className="mt-1 sm:mt-2 max-w-3xl font-serif text-2xl min-[360px]:text-3xl min-[480px]:text-4xl sm:text-5xl lg:text-6xl leading-[1.08] sm:leading-[1.05] text-ink">
               {profile.fullName}
@@ -57,9 +53,11 @@ export function Hero({ profile, about, socialLinks = [] }) {
             <div className="mt-4 sm:mt-8 flex flex-wrap gap-2 sm:gap-3">
               <Button href="/projects" size="hero">View Projects</Button>
               <Button href="/contact" variant="secondary" size="hero">Contact Me</Button>
-              <Button href={RESUME_URL} variant="secondary" target="_blank" rel="noreferrer" size="hero">
-                View Resume
-              </Button>
+              {resumeUrl ? (
+                <Button href={resumeUrl} variant="secondary" target="_blank" rel="noreferrer" size="hero">
+                  View Resume
+                </Button>
+              ) : null}
             </div>
             {socialLinks.length ? (
               <ul className="mt-3.5 sm:mt-8 flex flex-wrap gap-1.5 sm:gap-2">
@@ -77,7 +75,7 @@ export function Hero({ profile, about, socialLinks = [] }) {
                 ))}
               </ul>
             ) : null}
-          </motion.div>
+          </div>
 
           <figure className="relative shrink-0 mt-5 min-[360px]:mt-7 sm:mt-10 md:mt-14 lg:mt-16 w-[105px] min-[360px]:w-[118px] min-[400px]:w-[138px] min-[480px]:w-[165px] sm:w-[220px] md:w-[280px] lg:w-[330px] xl:w-[340px]">
             <span className="pointer-events-none absolute -right-1 top-4 sm:top-8 h-12 w-12 sm:h-20 sm:w-20 rounded-full bg-soft hidden sm:block" aria-hidden />

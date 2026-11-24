@@ -4,7 +4,7 @@ import { Mark } from '@/components/common/Mark.jsx';
 import { usePortfolio } from '@/context/PortfolioContext.jsx';
 import { initials } from '@/utils/format.js';
 import { NAV_ITEMS } from '@/utils/navigation.js';
-import { RESUME_URL } from '@/utils/resume.js';
+import { resumeHref } from '@/utils/resume.js';
 import { isExternal, socialHref } from '@/utils/social.js';
 
 const headingClass = 'text-[11px] font-medium uppercase tracking-[0.18em] text-faint';
@@ -28,8 +28,11 @@ export function Footer() {
       };
       return rank(a.platform) - rank(b.platform);
     });
+  const resumeUrl = resumeHref(data?.resume);
   const quickLinks = [
-    { id: 'resume', label: 'Resume', href: RESUME_URL, external: true },
+    resumeUrl
+      ? { id: 'resume', label: 'Resume', href: resumeUrl, external: true }
+      : null,
     ...socials.map((link) => ({
       id: link.id,
       label: link.label || `${link.platform || 'Link'}`.replace(/^./, (letter) => letter.toUpperCase()),

@@ -26,9 +26,6 @@ export function AdminLayout() {
   const [open, setOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem('admin.sidebar') === 'collapsed');
 
-  if (status === 'loading') {
-    return <div className="grid min-h-screen place-items-center text-sm text-muted">Loading admin…</div>;
-  }
   if (status !== 'authenticated') {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
