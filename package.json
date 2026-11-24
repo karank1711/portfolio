@@ -8,6 +8,7 @@
     "dev:web": "npm run dev --prefix frontend",
     "dev:admin": "npm run dev --prefix admin",
     "build": "npm run build --prefix frontend && npm run build --prefix admin",
+    "build:web": "npm run build --prefix frontend",
     "seed": "npm run seed --prefix backend"
   },
   "devDependencies": {
