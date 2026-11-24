@@ -3,7 +3,8 @@ import { api } from '@/services/api.js';
 const projectCache = new Map();
 
 export function getPortfolio() {
-  return api('/portfolio');
+  // Always revalidate so admin resume URL changes appear without a redeploy.
+  return api('/portfolio', { method: 'GET', cache: 'no-store' });
 }
 
 export function getProject(slug, preview) {

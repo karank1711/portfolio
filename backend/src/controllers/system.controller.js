@@ -11,7 +11,11 @@ export const health = asyncHandler(async (req, res) => {
 });
 
 export const portfolio = asyncHandler(async (req, res) => {
-  res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
+  // Resume URL is edited in admin and must appear on the public site immediately.
+  // Do not let browsers/CDNs keep a stale /portfolio payload.
+  res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   ok(res, await portfolioService.getPublicPortfolio());
 });
 

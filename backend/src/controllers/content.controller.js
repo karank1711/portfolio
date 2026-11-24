@@ -64,7 +64,12 @@ export const deleteSocial = asyncHandler(async (req, res) => {
 });
 export const reorderSocial = asyncHandler(async (req, res) => ok(res, await socialService.reorderSocialLinks(req.body.ids)));
 
-export const getResume = asyncHandler(async (req, res) => ok(res, await resumeService.getResume()));
+export const getResume = asyncHandler(async (req, res) => {
+  res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  ok(res, await resumeService.getResume());
+});
 export const saveResume = asyncHandler(async (req, res) => ok(res, await resumeService.saveResumeUrl(req.body.fileUrl)));
 export const deleteResume = asyncHandler(async (req, res) => {
   await resumeService.deleteResume();

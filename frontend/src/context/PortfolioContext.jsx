@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { getPortfolio } from '@/services/portfolio.js';
 
 const PortfolioContext = createContext(null);
-const CACHE_KEY = 'portfolio_data_cache_v1';
+const CACHE_KEY = 'portfolio_data_cache_v2';
 
 function getCachedPortfolio() {
   try {

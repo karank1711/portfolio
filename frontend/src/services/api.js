@@ -11,7 +11,7 @@ function apiBase() {
   return base.endsWith('/api') ? base : `${base}/api`;
 }
 
-export async function api(path, { method = 'GET', body, signal } = {}) {
+export async function api(path, { method = 'GET', body, signal, cache } = {}) {
   let response;
   try {
     response = await fetch(`${apiBase()}${path}`, {
@@ -19,8 +19,7 @@ export async function api(path, { method = 'GET', body, signal } = {}) {
       headers: body ? { 'Content-Type': 'application/json' } : undefined,
       body: body ? JSON.stringify(body) : undefined,
       signal,
-      // Public GETs can reuse browser/CDN cache headers set by the API.
-      cache: method === 'GET' ? 'default' : 'no-store',
+      cache: cache || (method === 'GET' ? 'default' : 'no-store'),
     });
   } catch (error) {
     if (error?.name === 'AbortError') throw error;
